@@ -50,16 +50,22 @@
 										display.setText("Length and height must be entered");                       
 									}  
 									else                        
-									{     
+									{
 										//convert text input to doubles and set the length and height of the Oblong
 										testOblong.setLength(Double.parseDouble(lengthField.getText()));            
 										testOblong.setHeight(Double.parseDouble(heightField.getText())); 
 										// use the methods of Oblong to calculate the area and perimeter   
-										display.setText("The area is: " + testOblong.calculateArea()        
-										+ "\n" + "The perimeter is: "                                   
+										if (testOblong.getLength()==0 || testOblong.getHeight()==0) {
+											display.setText("Length and Height must not be zero");
+										} else if (testOblong.getLength() == testOblong.getHeight()) {
+											display.setText("Length and Height cannot be equal");
+										} else {
+											display.setText("The area is: " + testOblong.calculateArea()        
+											+ "\n" + "The perimeter is: "                                   
 												+ testOblong.calculatePerimeter());                         
-										}                                                                        
-									}                                     
+										};
+									}                            
+								}
 								); 
 			
 			// create and configure an HBox for the labels and text inputs                       
