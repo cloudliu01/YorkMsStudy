@@ -25,10 +25,15 @@
 			pushMeLabel.setTextFill(Color.RED);         
 			pushMeLabel.setFont(Font.font("Arial", 20));
 			
-			// create and configure a label which will cause the text to be displayed        
+			// create and configure a label which will cause the text to be displayed in capital case
 			Button pushMeButton = new Button();         
-			pushMeButton.setText("Type something in the box then push me");         
-			pushMeButton.setOnAction(e -> pushMeLabel.setText("You entered: " + pushMeTextField.getText()));         
+			pushMeButton.setText("Upper case me");         
+			pushMeButton.setOnAction(e -> pushMeLabel.setText("You entered in upper case: " + pushMeTextField.getText().toUpperCase()));         
+
+			// create and configure a label which will cause the text to be displayed        
+			Button howManyButton = new Button();         
+			howManyButton.setText("How many characters?");         
+			howManyButton.setOnAction(e -> pushMeLabel.setText("You entered " + pushMeTextField.getText().length()));
 			
 			// create and configure a VBox to hold our components               
 			VBox root = new VBox();         
@@ -36,7 +41,7 @@
 			root.setAlignment(Pos.CENTER); 
 			
 			//add the components to the VBox         
-			root.getChildren().addAll(pushMeTextField, pushMeButton, pushMeLabel); 
+			root.getChildren().addAll(pushMeTextField, pushMeButton, howManyButton, pushMeLabel); 
 	
 	
 			// create a new scene         
