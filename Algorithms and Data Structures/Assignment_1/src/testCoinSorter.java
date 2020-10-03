@@ -5,6 +5,7 @@
  */
 
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class testCoinSorter {
@@ -25,53 +26,68 @@ public class testCoinSorter {
 	public static void userInput (CoinSorter starter) {
 		Integer input;
 		do {
-			System.out.println("***Coin Sorter - Main Menu***");
-			System.out.println("1 - Coin calculator");
-			System.out.println("2 - Multiple coin calculator");
-			System.out.println("3 - Print coin list");
-			System.out.println("4 - Set details");
-			System.out.println("5 - Display program configurations");
-			System.out.println("6 - Quit the program");
+			// Print out prompt
+			String info = CoinSorter.promptMsg();
+			System.out.println(info);
+			
+			// Get & Validate input
 			input = starter.validateIntInput();
+
+			// Initialise variables going to be used
 			String msg;
 			Integer totalValue;
+
 			switch (input) {
+
+			//1 - Coin Calculator
 			case 1:
 				starter.validateTotalValue();
+				// validaeCoin() is not in the Assignment outline but seems better to have here
 				Integer vc = starter.validateCoin();
-				//msg = starter.callCoinCalculator(vc);
 				totalValue = starter.getTotalCoinValue();
 				msg = starter.coinCalculator(totalValue, vc);
-				System.out.println(msg);
+				starter.outFunc(msg);
 				break;
+
+			//2 - Multiple coin calculator
 			case 2:
 				starter.validateTotalValue();
 				starter.validateExcludedCoin();
-				// The original multiCoinCalculator() method requires the instance private 
-				// variable totalValue which is impossible to call from outside, hence needs to
-				// call the wrapper function instead
+
+				// Need to use below 2 customized gettattr fnctions to get the necessary parameters 
+				// which will be used as arguments in multiCoinCalculator()
 				totalValue = starter.getTotalCoinValue();
 				int excludedCoin = starter.getExcludedCoin();
-				//msg = starter.callMultiCoinCalculator();
+
 				msg = starter.multiCoinCalculator(totalValue, excludedCoin);
-				System.out.println(msg);
+				starter.outFunc(msg);
 				break;
+
+			//3 - Print coin list
 			case 3:
 				msg = starter.printCoinList();
-				System.out.println(msg);
+				starter.outFunc(msg);
 				break;
+				
+			//4 - Set details
 			case 4:
 				testCoinSorter.userInputOption4(starter);
 				break;
+				
+			//5 - Display program configurations
 			case 5:
 				msg = starter.displayProgramconfigs();
 				System.out.println(msg);
 				break;
+				
+			//6 - Quit the program
 			case 6:
-				System.out.println("INFO: Quit!");
+				starter.outFunc("INFO: Quit!");
 				break;
+				
+			//Otherwise - Warn user 
 			default:
-				System.out.println("WARNING: NOT Valid input: Must be 1 - 6 ");
+				starter.outFunc("WARNING: NOT Valid input: Must be 1 - 6 ");
 				break;
 			}
 			System.out.println("");
@@ -81,42 +97,51 @@ public class testCoinSorter {
 	public static void userInputOption4(CoinSorter starter) {
 		Integer input;
 		do {
-			System.out.println("***Set Details Sub-Menu***");
-			System.out.println("1 - Set currency");
-			System.out.println("2 - Set minimum coin input value");
-			System.out.println("3 - Set maximum coin input value");
-			System.out.println("4 - Return to main menu");
+		    String msg = starter.promptMsgSub4();
+			starter.outFunc(msg);
 			input = starter.validateIntInput();
+
 			switch (input) {
+
+				// Input currency
 				case 1:
-					// Input currency
-					System.out.println("Please type in currency:");
+					starter.outFunc("Please type in currency:");
 					Scanner sc = new Scanner(System.in);
 					String curIn = sc.next();
 					starter.setCurrency(curIn);
 					break;
+					
+				// Input minimum coin that is allowed
 				case 2:
-					// Input minimum coin that is allowed
-					System.out.println("Please type in the minimum coin value:");
+					starter.outFunc("Please type in the minimum coin value:");
 					int minCoinIn = starter.validateIntInput();
-					starter.setMinCoinIn(minCoinIn);
+					// only set when the range is valid
+					if (starter.validateMinMaxRange(minCoinIn, starter.getMaxCoinIn())) {
+					    starter.setMinCoinIn(minCoinIn);
+					}
 					break;
+					
+				// Ask for maximum coin that is allowed
 				case 3:
-					// Ask for maximum coin that is allowed
-					System.out.println("Please type in the maximum coin value:");
+					starter.outFunc("Please type in the maximum coin value:");
 					int maxCoinIn = starter.validateIntInput();
-					starter.setMaxCoinIn(maxCoinIn);
+					// only set when the range is valid
+					if (starter.validateMinMaxRange(starter.getMinCoinIn(), maxCoinIn)) {
+					    starter.setMaxCoinIn(maxCoinIn);
+					}
 					break;
+					
+				// GOTO upper level ( will break the outer while loop
+				//testCoinSorter.userInput(starter);
 				case 4:
-					// GOTO upper level ( will break the outer while loop
-					//testCoinSorter.userInput(starter);
 					break;
+					
+				// Otherwise - Repeat the option list as the outer while loop will continue
 				default:
-					// Repeat the option list as the outer while loop will continue
-					System.out.println("NOT Valid input");
+					starter.outFunc("NOT Valid input");
 					break;
 			}
-			System.out.println("");
+			starter.outFunc("");
 		} while (!input.equals(4));
 	}
 

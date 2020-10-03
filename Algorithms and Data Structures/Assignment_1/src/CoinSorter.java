@@ -13,6 +13,7 @@ import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
+
 public class CoinSorter {
 	private String currency;
 	private int minCoinIn = 0;
@@ -34,22 +35,46 @@ public class CoinSorter {
 	// ( It's in the class diagram )
 	public void coinSorter() { }
 	
+	// To show message to user. Can be overwritten by sub-classes to achieve 
+	// advanced output (eg: interactive GUI)
+	public void outFunc(String s) {
+		System.out.println(s);
+	}
+
 	// setter for currency
 	public void setCurrency(String cur) {
-		System.out.println("Set currency to: " + cur);
+		outFunc("Set currency to: " + cur);
 		currency = cur;
 	}
 
 	// setter for minCoinIn
 	public void setMinCoinIn(int coinIn) {
-		System.out.println("Set minCoinIn to: " + coinIn);
+		outFunc("Set minCoinIn to: " + coinIn);
 		minCoinIn = coinIn;
 	}
 
 	// setter for maxCoinIn
 	public void setMaxCoinIn(int coinIn) {
-		System.out.println("Set maxCoinIn to: " + coinIn);
+		outFunc("Set maxCoinIn to: " + coinIn);
 		maxCoinIn = coinIn;
+	}
+
+	/* setter for setTotalCoinValue
+	 * This function is not in the Assignment outline however it makes more sense to have 
+	 * when this value needs to be set in sub-class
+	*/
+	public void setTotalCoinValue(int coinIn) {
+		outFunc("Set totalCoinValue to: " + coinIn);
+		totalCoinValue = coinIn;
+	}
+
+	/* setter for setExcludedCoin
+	 * This function is not in the Assignment outline however it makes more sense to have 
+	 * when this value needs to be set in sub-class
+	*/
+	public void setExcludedCoin(int coinIn) {
+		outFunc("Set ExcludedCoin to: " + coinIn);
+		excludedCoin = coinIn;
 	}
 
 	/* 
@@ -87,9 +112,17 @@ public class CoinSorter {
 		return maxCoinIn;
 	}
 
+	/*
+	 * This function is not in the Assignment outline however it makes more sense to have 
+	 * when this value needs to be set in sub-class
+	*/
+	public Integer[] getCoinList() {
+		return coinList;
+	}
+
 	// Print out coinList, as well we return the message as a string for outer caller
 	public String printCoinList() {
-		String msg = "The current coin denominations are in circulations: " + Arrays.toString(coinList);
+		String msg = "The current coin denominations are in circulations: " + Arrays.toString(getCoinList());
 		//System.out.println(msg);
 		return msg;
 	}
@@ -98,10 +131,10 @@ public class CoinSorter {
 	public void validateTotalValue() {
 		// set the default to be out of boundary so that it always gets checked
 		int inputValue;
-		System.out.println("Please input the totalCoinValue: ");
+		outFunc("Please input the totalCoinValue: ");
 		inputValue = validateIntInput();
 		if ( inputValue < minCoinIn || inputValue > maxCoinIn) {
-			System.out.println("WARNING: totalCoinValue must be in a range: [" 
+			outFunc("WARNING: totalCoinValue must be in a range: [" 
 					+ minCoinIn + ", " + maxCoinIn + "]"); 
 			validateTotalValue();
 		} else {
@@ -111,28 +144,29 @@ public class CoinSorter {
 
 	// Validate instance private variable excludeCoin
 	public void validateExcludedCoin() {
-		System.out.println("Coin to be excluded");
+		outFunc("Coin to be excluded");
 		excludedCoin = validateCoin();
 	}
 
 	// Validate coin (generic)
 	public Integer validateCoin() {
 		Integer inputValue;
-		System.out.println("Please input the coin denomination: ");
+		outFunc("Please input the coin denomination: ");
 		inputValue = validateIntInput();
-		if ( Arrays.asList(coinList).contains(inputValue)) {
+		if ( Arrays.asList(getCoinList()).contains(inputValue)) {
 			return inputValue;
 		} else {
 			/* When user inputed a value not in the denomination list
 			* Warn user and repeat the input prompt
 			* */
-			System.out.println("Wrong coin specified. It's must be one of " + 
-					Arrays.toString(coinList));
+			outFunc("Wrong coin specified. It's must be one of " + 
+					Arrays.toString(getCoinList()));
 			return validateCoin();
 		}
 	}
 
-	public String callCoinCalculator(Integer coinType) {
+
+	public String coinCalculator(Integer coinType) {
 		/* 
 		   The original multiCoinCalculator() method requires the instance private 
 		   variable totalValue which is impossible to call from outside, hence needs to
@@ -140,6 +174,7 @@ public class CoinSorter {
 		*/
 		return coinCalculator(totalCoinValue, coinType);
 	}
+
 
 	public String coinCalculator(int totalValue, int coinType) {
 		/*
@@ -151,7 +186,7 @@ public class CoinSorter {
 		return msg;
 	}
 
-	public String callMultiCoinCalculator() {
+	public String multiCoinCalculator() {
 		/* 
 		   The original multiCoinCalculator() method requires the instance private 
 		   variable totalValue which is impossible to call from outside, hence needs to
@@ -166,7 +201,7 @@ public class CoinSorter {
 		 */
 		Hashtable<Integer, Integer> dnTable = new Hashtable<Integer, Integer>();
 		int tempTotalValue = totalValue;
-		for (int coinType : coinList) {
+		for (int coinType : getCoinList()) {
 			if (coinType == coinExd) {
 				// excluded coin has 0 number of coins
 				dnTable.put(coinType, 0); 
@@ -183,7 +218,7 @@ public class CoinSorter {
 			tempTotalValue = reminder;
 		}
 		String msg = "The coins exchanged are: ";
-		for (Integer d: coinList) {
+		for (Integer d: getCoinList()) {
 			msg = msg + dnTable.get(d) + " x " + d + ", ";
 		}
 		msg = msg + "with a reminder of " + tempTotalValue + ".\n";
@@ -211,11 +246,47 @@ public class CoinSorter {
 			inputValue = sc.nextInt();
 			return inputValue;
 		} catch (InputMismatchException ex) {
-			System.out.println("WARNING: Wrong input specified. it's must be an integer. Try again!");
-			System.out.println(ex);
+			outFunc("WARNING: Wrong input specified. it's must be an integer. Try again!");
+			outFunc(ex.toString());
 			return validateIntInput();
 		}
 		
+	}
+
+	/*
+	 * To constantly prompt user to type in an integer (repeat if not)
+	 */
+	public boolean validateMinMaxRange(int min, int max) {
+	    if ( min <= max ) {
+	        return true;
+	    } else {
+	        outFunc("WARNING: setting failed - minCoinIn ( " + min + ") is larger than maxCoinIn (" + max + "). Please try again!");
+	        return false;
+	    }
+	}
+	
+	// To construct prompt message for the main menu
+	public static String promptMsg() {
+		String  out = "";
+		out +=  "***Coin Sorter - Main Menu***\n" ;
+		out +=  "1 - Coin calculator\n" ;
+		out +=  "2 - Multiple coin calculator\n" ;
+		out +=  "3 - Print coin list\n" ;
+		out +=  "4 - Set details\n" ;
+		out +=  "5 - Display program configurations\n" ;
+		out +=  "6 - Quit the program\n" ;
+		return out;
+	}
+
+	// To construct prompt message for the sub menu for option 4
+	public static String promptMsgSub4() {
+		String  out = "";
+	    out += "***Set Details Sub-Menu***\n";
+	    out += "1 - Set currency\n";
+	    out += "2 - Set minimum coin input value\n";
+	    out += "3 - Set maximum coin input value\n";
+	    out += "4 - Return to main menu\n";
+	    return out;
 	}
 
 }
