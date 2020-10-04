@@ -1,7 +1,7 @@
 /**
  * 
    Class:   CoinSorterGUI
-   Author:  Lizhuang Liu
+   Author:  
    Date:    Sep 28 2020
  */
 
@@ -120,6 +120,7 @@ public class CoinSorterGUI extends CoinSorter {
         Button cancelButton = getCancelButton(root);
         
         if (stateIn == 0) {
+            // Show the main menu
             String s = promptMsg();
             outFunc(info, s);
             optionHBox.setVisible(true);
@@ -137,7 +138,7 @@ public class CoinSorterGUI extends CoinSorter {
 
             result.setVisible(true);
         } else if (stateIn == 1 || stateIn == 2) {
-            // To initialize result TextArea for every updateState call that needs a new output
+            // To update the form when option 1 / 2 is chosen ( button 1 / 2 is clicked)
             result.setText("");
 
             String msg = "Please input:\n";
@@ -162,6 +163,7 @@ public class CoinSorterGUI extends CoinSorter {
             result.setVisible(true);
             
             outFunc(info, msg);
+            // To set the callback function to run based on the inputs & current configurations
             runButton.setOnAction(e -> 
                 {
                     boolean pass1 = validateTotalValue(totalCoinValueTextField, result);
@@ -182,9 +184,12 @@ public class CoinSorterGUI extends CoinSorter {
             );
 
         } else if (stateIn == 3) {
+            // Option / button 3, to print the coinList
             String msg = printCoinList();
             outFunc(result, msg);
+
         } else if (stateIn == 4) {
+            // Update the form to show sub menus
             String msg = promptMsgSub4();
             outFunc(info, msg);
             optionHBox.setVisible(false);
@@ -202,6 +207,13 @@ public class CoinSorterGUI extends CoinSorter {
 
             result.setVisible(true);
 
+            /*
+             *To set the callback function to run based on the inputs & current configurations
+             * minCoinIn & maxCoinIn must
+             *  * be integers
+             *  * maxCoinIn > minCoinIn
+             * Otherwise show user a warning and stick to the form status
+            */
             runButton.setOnAction(e -> 
                 {
                     // below will always successful as the textFiled has been customized to only accept integer
@@ -230,31 +242,31 @@ public class CoinSorterGUI extends CoinSorter {
                 }
             );
 
+        // Option 5, show program configurations
         } else if (stateIn == 5) {
             String msg = displayProgramconfigs();
             outFunc(result, msg);
+
+        // any input else will lead to a warning
         } else {
-            outFunc(result, "Unknown option");
+            outFunc(result, "WARNING: Unknown option. Try again");
         }
         
         
         
     }
 
-    // validaeCoin() is not in the Assignment outline but seems better to have here
-    //Integer vc = starter.validateCoin();
-    //totalValue = starter.getTotalCoinValue();
-    //msg = starter.coinCalculator(totalValue, vc);
-    //starter.outFunc(msg);
-        
+    // to output a text into the resultTextArea
     public void outFunc(TextArea resultTextArea, String s) {
         resultTextArea.setText(s+"\n");
     }
     
+    // settattr for currentState
     public void setCurrentState(Integer i) {
         currentState = i;
     }
 
+    // gettattr for currentState
     public Integer getCurrentState() {
         return currentState;
     }

@@ -1,6 +1,5 @@
 /**
    Class:   testCoinSorter
-   Author:  Lizhuang Liu
    Date:    Sep 27 2020
  */
 
@@ -209,11 +208,6 @@ public class CoinSorter {
 			}
 			int c = tempTotalValue / coinType;
 			int reminder  = tempTotalValue % coinType;
-			//System.out.println(coinType);
-			//System.out.println(c);
-			//System.out.println(reminder);
-			//System.out.println("===============");
-			//nList.add(c);
 			dnTable.put(coinType, c);
 			tempTotalValue = reminder;
 		}

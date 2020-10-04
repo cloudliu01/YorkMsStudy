@@ -1,6 +1,6 @@
 /**
    Class:   testCoinSorter
-   Author:  Lizhuang Liu
+   Author:  
    Date:    Sep 27 2020
  */
 
@@ -14,12 +14,6 @@ public class testCoinSorter {
 		Integer coinList[] =  {100, 50, 20, 10, 5, 2};
 		CoinSorter starter = new CoinSorter("Pounds sterling", 0, 9999, coinList);
 
-		/*
-		String r = starter.multiCoinCalculator(523, 10);
-		System.out.print(r);
-		String d = starter.displayProgramconfigs();
-		System.out.print(d);
-		*/
 		testCoinSorter.userInput(starter);
 	}
 	
